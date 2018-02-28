@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import AddForm from './containers/AddForm';
+import AddForm from '../../components/AddForm';
+import ReportBar from '../../components/ReportBar';
+import SearchBar from '../../components/SearchBar';
+import ExpenseList from '../../components/ExpenseList';
 
 const list = [
   {
@@ -16,14 +18,6 @@ const list = [
     objectID: 0,
   }
 ];
-
-const ExpenseRender = ({item, updateItem}) => <div> 
-    <h1>{item.description}</h1>
-    <h2>Amount: {item.amount} &euro;</h2>
-    <p>{item.date}</p>
-    <button onClick={() => updateItem(item.objectID)}>Update Element</button>
-    <button onClick={() => this.removeItem(item.objectID)}>Delete Element</button>
-</div>
 
 class App extends Component {
   constructor(props) {
@@ -59,15 +53,14 @@ class App extends Component {
 
   filterByText = (item,value) => item.description.toLowerCase().includes(value.toLowerCase())
 
-  renderList = (elements) => elements.map(item => <ExpenseRender item={item} key={item.objectID} updateItem={this.updateItem} />);
+  renderList = (elements) => <ExpenseList list={elements} updateItem={this.updateItem} removeItem={this.removeItem} />;
 
   render() {
       const {list, totalAmount, filterInput, filteredList, updatingItem} = this.state;
-      
+
       return <div className="App">
-        <input type="text" value={filterInput} onChange={this.handleFilter} placeholder="Filter data by text" />
-        <p>There are {list.length} expenses</p>
-        <p>The total amount of the expenses is {list.reduce((previous, next) => previous + next.amount, 0)}</p>
+        <SearchBar filterInput={filterInput} handleFilter={this.handleFilter} />
+        <ReportBar totalItems={list.length} handleClick={this.handleClick} totalAmount={list.reduce((previous, next) => previous + next.amount, 0)} />
 
         <AddForm addElement={this.addElement} updatingItem = {list.find(item => item.objectID === updatingItem)} />
         {filterInput !== '' ? this.renderList(filteredList) : this.renderList(list) }

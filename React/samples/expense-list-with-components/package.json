@@ -1,5 +1,5 @@
 {
-  "name": "expense-list-with-state",
+  "name": "expense-list-with-components",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
